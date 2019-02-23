@@ -64,37 +64,37 @@ int count_words(char* word){
 	}
 	return count;
 }
-// char** argtok(char* token){
-//   //tokenizes a string and returns them in array of memory allocated tokens
-// 	int length = string_length(token);
-// 	int words = count_words(token);
-// 	char* ptoken = token;
-// 	char** tokens = malloc(words*sizeof(char*));
+ char** argtok(char* token){
+   //tokenizes a string and returns them in array of memory allocated tokens
+ 	int length = string_length(token);
+ 	int words = count_words(token);
+ 	char* ptoken = token;
+ 	char** tokens = malloc(words*sizeof(char*));
 	
-// 	printf("The String Tokenized:  \n");
-//         // index less then words
-// 	for(int index = 0;index < words; index++){
-// 	  //pointer - token 
-// 		int start = find_word_start(token,ptoken-token);
-// 		int end = find_word_end(token,start);
-// 		int token_size = end - start;
+ 	//printf("The String Tokenized:  \n");
+         // index less then words
+ 	for(int index = 0;index < words; index++){
+ 	  //pointer - token 
+ 		int start = find_word_start(token,ptoken-token);
+ 		int end = find_word_end(token,start);
+ 		int token_size = end - start;
 		
-// 		ptoken = token + start;
-// 		*(tokens+index) = malloc(length*sizeof(char));
+ 		ptoken = token + start;
+ 		*(tokens+index) = malloc(length*sizeof(char));
 		
-// 		for(int jindex = 0;jindex< token_size; jindex++){
-// 			*(*(tokens+index)+jindex) = *ptoken;
-// 			ptoken++;
-// 		}
+ 		for(int jindex = 0;jindex< token_size; jindex++){
+ 			*(*(tokens+index)+jindex) = *ptoken;
+ 			ptoken++;
+ 		}
 		
-// 	}
-// 	tokens[words] = NULL;
-// 	return tokens;
-// }
+ 	}
+ 	tokens[words] = NULL;
+ 	return tokens;
+ }
 
-
+/*
 char** argtok(char* words){
-
+  
 char ** token = NULL;
     int start = find_word_start(words,0);
     int end = find_word_end(words,start);
@@ -111,13 +111,14 @@ char ** token = NULL;
             start++;
 
         }
-
+	
         start = find_word_start(words, end+1);
         end = find_word_end(words,start); 
-    }
+	}
     token[count_words(words)+1] = '\0';
-    return token;
-}
+     return token;
+    }
+  */
 
 void print_tokens(char** token){
   //prints the tokens

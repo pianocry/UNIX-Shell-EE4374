@@ -22,8 +22,10 @@ int main()
 	{
 		// Request a line of input
 		write(1, "\nshell -> ", 10);
+
 		// Read the line
 		inputSize = read(0, buff, 128);
+
 		// Strip off carriage return
 		buff[inputSize-1] = '\0';
 
