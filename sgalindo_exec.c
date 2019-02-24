@@ -7,23 +7,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <dirent.h>
-//#include <direct.h>
-//#include <dir.h>
-//#include <string.h>
 #include <sys/stat.h>
-
 #include "sgalindo_argtok.h"
 #include "sgalindo_exec.h"
-
-
-int executeCmd(char **args)
-{
-  
-   
-  execvp(args[0],args);
-
-}
-
 
 int execBackground(char **args)
 {
@@ -45,4 +31,17 @@ int execBackground(char **args)
         return 0;
     }
 }
+int executeCmd(char **args)
+{
+  if(execBackground(args)==1){
+  printf("%d",execBackground(args));
+
+ }
+   else{  
+
+  execvp(args[0],args);
+  }
+  
+}
+
 

@@ -42,10 +42,10 @@ int main()
 
 		//print tokens
 		//print_tokens(args);
-
+	       
 		// execute the command
 		executeCmd(args);
-		printf("%d\n",executeCmd(args) );
+		printf("%d\n",execBackground(args) );
 
 	}
 
