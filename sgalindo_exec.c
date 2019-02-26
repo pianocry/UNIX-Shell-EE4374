@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <dirent.h>
+#include <sys/wait.h>
 #include <sys/stat.h>
 #include "sgalindo_argtok.h"
 #include "sgalindo_exec.h"
@@ -31,17 +31,40 @@ int execBackground(char **args)
         return 0;
     }
 }
+
 int executeCmd(char **args)
 {
-  if(execBackground(args)==1){
-  printf("%d",execBackground(args));
-
- }
-   else{  
-
-  execvp(args[0],args);
+   char** arg = args;
+  pid_t myPid;
+  if(execBackground(arg)==1){
+    myPid = fork();
+    if(myPid < 0){
+      fprintf(stderr,"ERROR\n");
+      return -1;
+    }
+    else if(myPid ==0){
+      printf("CHILD");
+      execvp(arg[0],arg);
+    }  
+    return 0;
   }
-  
+  /*  
+else{
+    pid_t myPidBack; 
+    myPidBack = fork();
+    if(myPidBack < 0){
+      fprintf(stderr,"ERROR\n");
+      return -1;
+    }
+    else if(myPidBack ==0){
+      execvp(arg[0],arg);
+    }
+    else{
+      waitpid(myPidBack,NULL,0);
+    }  
+    return 0;
+  }
+  */
 }
 
 

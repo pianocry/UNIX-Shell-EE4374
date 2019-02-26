@@ -45,7 +45,7 @@ int main()
 	       
 		// execute the command
 		executeCmd(args);
-		printf("%d\n",execBackground(args) );
+		//printf("%d\n",execBackground(args) );
 
 	}
 

@@ -19,7 +19,7 @@ int string_length(char* str){
 
 char is_valid_character(char c){
 	//checks if character given is within the valid range set  
-	if( c == 32 || c == 9 ){
+	if( c == '\t' || c == '\n' || c == '\v' ){
 		return 0;
 	}
 	else{
@@ -64,6 +64,30 @@ int count_words(char* word){
 	}
 	return count;
 }
+
+char** argtok(char* token){
+  char** tokens = NULL;
+  int length = 0;
+  int start = find_word_start(token,0);
+  int end = find_word_end(token,start);
+  int words = count_words(token);
+  tokens = (char**)malloc(words * sizeof(char*)+1);
+  for(int i =0; i < words; i++){
+    *(tokens + i) = (char*)malloc(length*sizeof(char)+1);
+    length = end - start;
+    for(int j = 0; j <= length; j++){
+      *(*(tokens+i)+j) = *(token+start);
+      start++;
+} 
+    start= find_word_start(token,(end+1));
+    end =find_word_end(token,start);
+}
+  tokens[words] = NULL;
+  return tokens;
+
+}
+
+/*
  char** argtok(char* token){
    //tokenizes a string and returns them in array of memory allocated tokens
  	int length = string_length(token);
@@ -91,7 +115,7 @@ int count_words(char* word){
  	tokens[words] = NULL;
  	return tokens;
  }
-
+*/
 /*
 char** argtok(char* words){
   
