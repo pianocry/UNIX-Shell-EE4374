@@ -1,6 +1,6 @@
 //
 //	EE 4374 Assignment # 2 Command Executer
-//	Author: ???
+//	Author: Sergio Galindo
 //
 #ifndef _SGALINDO_EXEC_
 #define _SGALINDO_EXEC_

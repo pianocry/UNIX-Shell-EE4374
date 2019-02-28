@@ -1,164 +1,158 @@
 //
 //	EE 4374 Assignment # 1 Argument Tokenizer
 //	Author: Sergio Galindo
-//
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "sgalindo_argtok.h"
-#include "sgalindo_exec.h"
 
-int string_length(char* str){
-	//gives the length of entire string
-	int length = 0;
-	while(*str != '\0' ){
-		length++;
-		str++;
-	}
-	return length;
-}
-
-char is_valid_character(char c){
-	//checks if character given is within the valid range set  
-	if( c == '\t' || c == '\n' || c == '\v' ){
-		return 0;
-	}
-	else{
-		return 1;
-	}
-}
-
-int find_word_start(char* c, int i){
-  //finds the start index of a string
-	int index = i;
-	while(!(is_valid_character( *(c+index)) )){
-		index++;
-	}
-	return index;
-}
-
-int find_word_end(char* str, int start_pos){
-  //finds ending index of the string
-	int index = start_pos;
-	while(is_valid_character( *(str+index) )){
-		index++;
-	}
-	return index;
-}
-
-int count_words(char* word){
-  //returns the number of individual tokens in the string
-	int count = 0;
-	int start = 0;
-	int end = 0;
-	int length = string_length(word);
-	char** ptr;
-	
-	while(1){
-		start = find_word_start(word,end);
-		ptr = &word;
-		if( start >= length ){
-			break;
-		}
-		count++;
-		end = find_word_end(word,start);
-	}
-	return count;
-}
-
-char** argtok(char* token){
+/* Tokenizes the string argument into an array of tokens. */
+char ** argtok(char * input)
+{
   char** tokens = NULL;
   int length = 0;
-  int start = find_word_start(token,0);
-  int end = find_word_end(token,start);
-  int words = count_words(token);
-  tokens = (char**)malloc(words * sizeof(char*)+1);
-  for(int i =0; i < words; i++){
-    *(tokens + i) = (char*)malloc(length*sizeof(char)+1);
-    length = end - start;
-    for(int j = 0; j <= length; j++){
-      *(*(tokens+i)+j) = *(token+start);
-      start++;
-} 
-    start= find_word_start(token,(end+1));
-    end =find_word_end(token,start);
-}
+  int start = find_word_start(input,0);
+  int end = find_word_end(input,start);
+  int words = count_words(input);
+  tokens = (char **)malloc(words * sizeof(char *)+1);
+
+  for(int i = 0; i < words; i++)
+    {
+      *(tokens + i) = (char*)malloc(length * sizeof(char)+1);
+      length = end - start;
+      for(int j = 0; j <= length; j++)
+	{
+	  *(*(tokens+i)+j) = *(input + start);
+	  start++;
+	}
+      start = find_word_start(input,(end+1));
+      end = find_word_end(input,start);
+    }
   tokens[words] = NULL;
   return tokens;
-
 }
 
-/*
- char** argtok(char* token){
-   //tokenizes a string and returns them in array of memory allocated tokens
- 	int length = string_length(token);
- 	int words = count_words(token);
- 	char* ptoken = token;
- 	char** tokens = malloc(words*sizeof(char*));
-	
- 	//printf("The String Tokenized:  \n");
-         // index less then words
- 	for(int index = 0;index < words; index++){
- 	  //pointer - token 
- 		int start = find_word_start(token,ptoken-token);
- 		int end = find_word_end(token,start);
- 		int token_size = end - start;
-		
- 		ptoken = token + start;
- 		*(tokens+index) = malloc(length*sizeof(char));
-		
- 		for(int jindex = 0;jindex< token_size; jindex++){
- 			*(*(tokens+index)+jindex) = *ptoken;
- 			ptoken++;
- 		}
-		
- 	}
- 	tokens[words] = NULL;
- 	return tokens;
- }
-*/
-/*
-char** argtok(char* words){
-  
-char ** token = NULL;
-    int start = find_word_start(words,0);
-    int end = find_word_end(words,start);
-    int w_count = count_words(words);
-    int temp = end - start;
-
-    token = ((char ** ) malloc(sizeof(char*) * w_count + 1)); //rows
-    for(int i = 0; i < w_count ; i++){
-        *(token + i) = (char*) malloc(sizeof(char) * temp+1); //coloms
-        temp = end - start;
-        for(int j = 0;  j <= temp+1; j++){ //
-            *(*(token+i)+j) = *(words + (start)); //copying
-
-            start++;
-
-        }
-	
-        start = find_word_start(words, end+1);
-        end = find_word_end(words,start); 
-	}
-    token[count_words(words)+1] = '\0';
-     return token;
+/* Free all tokens and the array containing the tokens. */
+void free_tokens(char** input)
+{
+  int i = 0;
+  while(input[i] != NULL)
+    {
+      free(input[i]);
+      i++;
     }
-  */
-
-void print_tokens(char** token){
-  //prints the tokens
-	int index = 0;
-	while(token[index]){
-		printf("%s\n",token[index]);
-		index++;
-	}
+  free(input);
 }
 
-void free_tokens(char** token){
-  //frees the memory allocated for the tokens
-	int index = 0;
-	while(token[index] != NULL){
-		free(token[index]);
-	}
-	free(token);
+/* Print all tokens. */
+void print_tokens(char** input)
+{
+  int i = 0;
+  while(input[i] != NULL)
+    {
+      printf("%s\n", input[i]);
+      i++;
+    }
 }
 
+/* Count the number of words in the string argument. */
+int count_words(char *input)
+{
+  int inWord = 1;
+  int outOfWord = 0;
+  int state = outOfWord;
+  int wordCount = 0;
+  int strLength = string_length(input);
+
+  for(int i = 0; i <= strLength; i++)
+    if(input[i] == ' ' || input[i] == '\0' || input[i] == '\t')
+      state = outOfWord;
+    else if(state == outOfWord)
+      {
+	state = inWord;
+	wordCount++;
+      }
+  return wordCount;
+}
+
+/* Find the end index for the next word.
+   char* str - the string to search.
+   int pos - the index to start searching. */
+int find_word_end(char *input, int index)
+{
+  int inWord = 1;
+  int outOfWord = 0;
+  int state = outOfWord;
+  int endIndex = 0;
+  int wordCount = 0;
+  int strLength = string_length(input);
+
+  for(int i = index; i <= strLength; i++)
+    if(input[i] == ' ' || input[i] == '\0' || input[i] == '\t')
+      {
+	if(wordCount == 1)
+	  {
+	    state = outOfWord;
+	    endIndex = i-1;
+	    i = strLength;
+	  }
+	else
+	  state = outOfWord;
+      }
+    else if(state == outOfWord)
+      {
+	state = inWord;
+	wordCount++;
+      }
+  return endIndex;
+}
+
+/* Find the starting index for the next word.
+   char* str - the string to search.
+   int pos - the index to start searching. */
+int find_word_start(char *input, int index)
+{
+  int inWord = 1;
+  int outOfWord = 0;
+  int state = outOfWord;
+  int startIndex = 0;
+  int strLength = string_length(input);
+
+  for(int i = index; i <= strLength; i++)
+    if(input[i] == '\0')
+      {
+	startIndex = 1;
+	i = strLength;
+      }
+    else if(input[i] == ' ' || input[i] == '\t')
+      state = outOfWord;
+    else if(state == outOfWord)
+      {
+	startIndex = i;
+	i = strLength;
+      }
+  return startIndex;
+}
+
+/* Evaluate if the character c is an acceptable character for
+   a token (e.g. '0' is acceptable but '\t' is not.
+   Returns 0 if not, 1 if yes. */
+char is_valid_character(char c)
+{
+  if(c == '\t' || c == '\n' || c == '\v')
+    return 0;
+  else
+    return 1;
+}
+
+/* Count the number of characters in the string argument. */
+int string_length(char *input)
+{
+  char *input2 = input;
+
+  while(*input)
+    {
+      input++;
+    }
+  return input - input2;
+}
